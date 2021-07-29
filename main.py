@@ -22,7 +22,10 @@ def ssh_and_update_cron(list_ips):
             print("SSH into " + str(i))
             process = subprocess.Popen(
                 """ 
-                ssh ec2-user@172.30.138.8 "sudo bash -c 'touch /etc/cron.d/datadog-metrics'" \
+                ssh ec2-user@172.30.138.8 
+                "sudo bash -c 
+                'echo "* * * * * root FILENAME_TO_BE_EXCUTED / >> /tmp/datadog-metrics.log 2>&1" > /etc/cron.d/datadog-metrics'
+                " \
                 """,
                                        shell=True,
                                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT)

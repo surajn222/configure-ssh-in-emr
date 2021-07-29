@@ -24,9 +24,10 @@ def ssh_and_update_cron(list_ips):
             #Create a file with the command, and then try to execute the file
             f = open("ssh-configure-cron.sh", "w+")
             f.write(
-                """ssh ec2-user@172.30.138.8 "sudo bash -c 'touch /etc/cron.d/datadog-metrics; echo \"* * * * * root /usr/bin/ls / >> /tmp/datadog-metrics.log 2>&1\" > /etc/cron.d/datadog-metrics; ls /'"""""
+                r'ssh ec2-user@172.30.138.8 "sudo bash -c \'touch /etc/cron.d/datadog-metrics; echo \"* * * * * root /usr/bin/ls / >> /tmp/datadog-metrics.log 2>&1\" >  /etc/cron.d/datadog-metrics; ls / \'"'
             )
 
+            sys.exit()
             process = subprocess.Popen(
                 """ 
                 /bin/bash -c ssh-configure-cron.sh

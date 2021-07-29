@@ -15,6 +15,7 @@ def fetch_ip_address(cluster_id):
 
 
 def ssh_and_update_cron(list_ips):
+    print(list_ips)
     for i in list_ips:
         #SSH into the machine
         if str(i) == "172.30.138.8":

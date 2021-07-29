@@ -17,6 +17,7 @@ def fetch_ip_address(cluster_id):
 def ssh_and_update_cron(list_ips):
     for i in list_ips:
         #SSH into the machine
+        print("SSH into " + str(i))
         process = subprocess.Popen("ssh ec2-user@" + i + " ls", shell=True,
                                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         output, stderr = process.communicate()

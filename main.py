@@ -3,7 +3,7 @@ import os
 from aws_boto3 import *
 import subprocess
 import time
-
+import subprocess
 def fetch_ip_address(cluster_id):
     #get boto3 emr client
     obj_awsBoto3 = awsBoto3()
@@ -22,7 +22,7 @@ def ssh_and_update_cron(list_ips):
         if str(i) == "172.30.138.8":
             print("SSH into " + str(i))
 
-            ssh_cron_command = 'ssh ec2-user@172.30.138.8 "sudo bash -c \'touch /etc/cron.d/datadog-metrics; echo \\\"* * * * * root /usr/bin/ls / >> /tmp/datadog-metrics.log 2>&1\\\" >  /etc/cron.d/datadog-metrics; ls / \'"'
+            ssh_cron_command = 'ssh ec2-user@172.30.138.8 "sudo bash -c \'touch /etc/cron.d/datadog-metrics; echo \\\"* * * * * root /usr/bin/ls / >> /tmp/datadog-metrics.log 2>&1\\\" >  /etc/cron.d/datadog-metrics; \'"'
             ssh_cron_command = ' ssh ec2-user@172.30.138.8 "sudo bash -c \'ls / \' " '
             #Create a file with the command, and then try to execute the file
             f = open("ssh-configure-cron.sh", "w+")
@@ -30,6 +30,8 @@ def ssh_and_update_cron(list_ips):
                 ssh_cron_command
             )
             f.close()
+
+            subprocess.call(['chmod', '0777', './ssh-configure-cron.sh'])
             #ssh ec2-user@172.30.138.8 "sudo bash -c 'touch /etc/cron.d/datadog-metrics; echo \"* * * * * root /usr/bin/ls / >> /tmp/datadog-metrics.log 2>&1\" > /etc/cron.d/datadog-metrics; ls /'"
 
             time.sleep(1)

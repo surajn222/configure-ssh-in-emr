@@ -19,7 +19,7 @@ class awsBoto3:
 
         self.list_ips = []
         #print(response['Instances'][len(list_intance_resp['Instances']) - 1]['PrivateIpAddress']
-        for i in range(2):
+        for i in range(12):
             self.list_ips.append(response["Instances"][i]["PrivateIpAddress"])
 
         return self.list_ips

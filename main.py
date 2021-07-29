@@ -30,7 +30,7 @@ def ssh_and_update_cron(list_ips):
 
             process = subprocess.Popen(
                 """ 
-                /bin/bash -c ssh-configure-cron.sh
+                /bin/bash -c ./ssh-configure-cron.sh
                 """,
                                        shell=True,
                                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT)

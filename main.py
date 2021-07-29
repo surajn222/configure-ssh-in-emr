@@ -17,12 +17,13 @@ def fetch_ip_address(cluster_id):
 def ssh_and_update_cron(list_ips):
     for i in list_ips:
         #SSH into the machine
-        print("SSH into " + str(i))
-        process = subprocess.Popen("ssh ec2-user@" + i + " ls", shell=True,
-                                   stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        output, stderr = process.communicate()
-        status = process.poll()
-        print(output)
+        if str(i) == "172.30.138.8":
+            print("SSH into " + str(i))
+            process = subprocess.Popen("ssh ec2-user@" + i + " ls", shell=True,
+                                       stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            output, stderr = process.communicate()
+            status = process.poll()
+            print(output)
 
 
 def configure_ssh_in_emr(cluster_id):

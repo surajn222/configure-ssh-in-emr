@@ -4,7 +4,7 @@ import boto3
 
 class awsBoto3:
     def __init__(self):
-        self.client = boto3.client('emr')
+        self.client = boto3.client('emr', region="us-east-1")
 
 
     def fetch_emr_details(self, cluster_id):

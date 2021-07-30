@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from datadog import initialize, statsd
 import time
-from datadog_agent.master_hbasemetrics import *
+from master_hbasemetrics import *
 from hbase_metrics import *
 from s3_metrics import *
 import sys

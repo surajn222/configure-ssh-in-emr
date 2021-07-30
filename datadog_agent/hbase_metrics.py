@@ -1,6 +1,6 @@
 from datadog import initialize, statsd
 import time
-from datadog_agent.master_hbasemetrics import *
+from master_hbasemetrics import *
 
 class hbase_metrics:
     def __init__(self, list_metrics):

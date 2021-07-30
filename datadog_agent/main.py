@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 from datadog import initialize, statsd
 import time
-from master_hbasemetrics import *
-from hbase_metrics import *
-from s3_metrics import *
+from datadog_agent.master_hbasemetrics import *
+from datadog_agent.hbase_metrics import *
+from datadog_agent.s3_metrics import *
 import sys
 import configparser
-from emr_utils import *
+from datadog_agent.emr_utils import *
 
 config = configparser.ConfigParser(allow_no_value=True, delimiters=('='))
 config.read('config.ini')

@@ -19,34 +19,34 @@ def ssh_and_update_cron(list_ips):
     print(list_ips)
     for i in list_ips:
         #SSH into the machine
-        if str(i) == "172.30.138.8":
-            print("==================================SSH into " + str(i) + "=============================================")
+        #if str(i) == "172.30.138.8":
+        print("==================================SSH into " + str(i) + "=============================================")
 
-            ssh_cron_command = 'ssh ec2-user@172.30.138.8 "sudo bash -c \'touch /etc/cron.d/datadog-metrics; echo \\\"* * * * * root /usr/bin/ls / >> /tmp/datadog-metrics.log 2>&1\\\" >  /etc/cron.d/datadog-metrics; \'"'
-            ssh_cron_command = ' ssh ec2-user@172.30.138.8 "sudo bash -c \'ls / \' " '
-            ssh_cron_command = ' ssh ec2-user@' + i +' "sudo bash -c \'ifconfig \' " '
-            ssh_cron_command = 'ssh ec2-user@' + i + ' "sudo bash -c \'touch /etc/cron.d/datadog-metrics; echo \\\"* * * * * root cd /efs/users/datadog_agent/; /usr/bin/python3 /efs/users/datadog_agent/main.py CLUSTERNAME / >> /tmp/datadog-metrics.log 2>&1\\\" >  /etc/cron.d/datadog-metrics; \'"'
+        ssh_cron_command = 'ssh ec2-user@172.30.138.8 "sudo bash -c \'touch /etc/cron.d/datadog-metrics; echo \\\"* * * * * root /usr/bin/ls / >> /tmp/datadog-metrics.log 2>&1\\\" >  /etc/cron.d/datadog-metrics; \'"'
+        ssh_cron_command = ' ssh ec2-user@172.30.138.8 "sudo bash -c \'ls / \' " '
+        ssh_cron_command = ' ssh ec2-user@' + i +' "sudo bash -c \'ifconfig \' " '
+        ssh_cron_command = 'ssh ec2-user@' + i + ' "sudo bash -c \'touch /etc/cron.d/datadog-metrics; echo \\\"* * * * * root cd /efs/users/datadog_agent/; /usr/bin/python3 /efs/users/datadog_agent/main.py CLUSTERNAME / >> /tmp/datadog-metrics.log 2>&1\\\" >  /etc/cron.d/datadog-metrics; \'"'
 
-            #Create a file with the command, and then try to execute the file
-            f = open("ssh-configure-cron.sh", "w+")
-            f.write(
-                ssh_cron_command
-            )
-            f.close()
+        #Create a file with the command, and then try to execute the file
+        f = open("ssh-configure-cron.sh", "w+")
+        f.write(
+            ssh_cron_command
+        )
+        f.close()
 
-            subprocess.call(['chmod', '0777', './ssh-configure-cron.sh'])
-            #ssh ec2-user@172.30.138.8 "sudo bash -c 'touch /etc/cron.d/datadog-metrics; echo \"* * * * * root /usr/bin/ls / >> /tmp/datadog-metrics.log 2>&1\" > /etc/cron.d/datadog-metrics; ls /'"
+        subprocess.call(['chmod', '0777', './ssh-configure-cron.sh'])
+        #ssh ec2-user@172.30.138.8 "sudo bash -c 'touch /etc/cron.d/datadog-metrics; echo \"* * * * * root /usr/bin/ls / >> /tmp/datadog-metrics.log 2>&1\" > /etc/cron.d/datadog-metrics; ls /'"
 
-            time.sleep(1)
-            process = subprocess.Popen(
-                """ 
-                /bin/bash -c ./ssh-configure-cron.sh
-                """,
-                                       shell=True,
-                                       stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-            output, stderr = process.communicate()
-            status = process.poll()
-            print(output)
+        time.sleep(1)
+        process = subprocess.Popen(
+            """ 
+            /bin/bash -c ./ssh-configure-cron.sh
+            """,
+                                   shell=True,
+                                   stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        output, stderr = process.communicate()
+        status = process.poll()
+        print(output)
 
 
 def configure_ssh_in_emr(cluster_id):

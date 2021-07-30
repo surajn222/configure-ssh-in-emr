@@ -28,7 +28,7 @@ def ssh_and_update_cron(list_ips):
         ssh_cron_command = 'ssh ec2-user@' + i + ' "sudo bash -c \'touch /etc/cron.d/datadog-metrics; echo \\\"* * * * * root cd /efs/users/datadog_agent/; /usr/bin/python3 /efs/users/datadog_agent/main.py CLUSTERNAME / >> /tmp/datadog-metrics.log 2>&1\\\" >  /etc/cron.d/datadog-metrics; \'"'
 
         #Create a file with the command, and then try to execute the file
-        f = open("ssh-configure-cron.sh", "w+")
+        f = open("ssh-configure-cron.sh", "qw+")
         f.write(
             ssh_cron_command
         )

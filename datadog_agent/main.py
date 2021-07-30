@@ -32,20 +32,23 @@ file_name = "list_of_metrics"
 create_file(file_name)
 
 for hostname in list_hostnames:
-    if "/" in hostname:
-        if str_is_master:
-            hostname = hostname.split(":")[0] + str(":16010")
-        else:
-            hostname = hostname.split(":")[0] + str(":16030")
+    try:
+        if "/" in hostname:
+            if str_is_master:
+                hostname = hostname.split(":")[0] + str(":16010")
+            else:
+                hostname = hostname.split(":")[0] + str(":16030")
 
-    hostname = str_local_ip + ":" + hostname.split(":")[1]
-    print("Hostname to be passed: " + hostname)
+        hostname = str_local_ip + ":" + hostname.split(":")[1]
+        print("Hostname to be passed: " + hostname)
 
-    obj_hbase_metrics = hbase_metrics(list_metrics)
-    obj_hbase_metrics.initialize()
-    obj_hbase_metrics.service_check()
-    obj_hbase_metrics.fetch_and_append_metrics(hostname, file_name)
-    obj_hbase_metrics.fetch_and_push_metrics(hostname)
+        obj_hbase_metrics = hbase_metrics(list_metrics)
+        obj_hbase_metrics.initialize()
+        obj_hbase_metrics.service_check()
+        obj_hbase_metrics.fetch_and_append_metrics(hostname, file_name)
+        obj_hbase_metrics.fetch_and_push_metrics(hostname)
+    except Exception as e:
+        print("Exception in fetching or pushing metrics: " + str(e))
 
 
 #S3 metrics

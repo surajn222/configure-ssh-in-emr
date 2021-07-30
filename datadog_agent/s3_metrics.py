@@ -30,11 +30,15 @@ class s3_metrics:
         for i in table:
             size=0
             count=0
-            pages = paginator.paginate(Bucket=bucket_name, Prefix=prefix+i+'/')
-            for page in pages:
-               for obj in page['Contents']:
-                 size+=obj['Size']
-                 count+=1
+            try:
+                pages = paginator.paginate(Bucket=bucket_name, Prefix=prefix+i+'/')
+                for page in pages:
+                   for obj in page['Contents']:
+                     size+=obj['Size']
+                     count+=1
+            except Exception as e:
+                print("Exception when calculating size of tables: " + str(e))
+                size = 0
             print("Pushing metric: " + str(i) + " Size:" + str(size) + " Count:" + str(count))
             statsd.gauge('aws_s3.tablesize',size,tags=[tag,"table:"+i])
             statsd.gauge('aws_s3.num_of_objects_in_table',count,tags=[tag,"table:"+i])

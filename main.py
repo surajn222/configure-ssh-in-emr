@@ -64,7 +64,7 @@ def configure_ssh_in_emr(cluster_id):
 parser = argparse.ArgumentParser(description='Configure cron jobs on EMR Servers')
 parser.add_argument('--cluster_id', '-c', type=str, help='EMR cluster ID')
 args = parser.parse_args()
-cluster_id = args.Path
+cluster_id = args.cluster_id
 
 try:
     configure_ssh_in_emr(cluster_id)

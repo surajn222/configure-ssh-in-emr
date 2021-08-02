@@ -9,6 +9,7 @@ class awsBoto3:
 
     def fetch_emr_details(self, cluster_id):
         self.cluster_id = cluster_id
+
         response = self.client.list_instances(
             ClusterId=self.cluster_id,
             InstanceStates=[
@@ -16,8 +17,8 @@ class awsBoto3:
             ],
         )
         #Get list of ip addresses.
-
         self.list_ips = []
+
         #print(response['Instances'][len(list_intance_resp['Instances']) - 1]['PrivateIpAddress']
         for i in range(12):
             self.list_ips.append(response["Instances"][i]["PrivateIpAddress"])

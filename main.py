@@ -1,9 +1,13 @@
 import sys
 import os
 from aws_boto3 import *
-import subprocess
 import time
 import subprocess
+from loggingInitializer import *
+import argparse
+
+logging = initialize_logger("log")
+
 def fetch_ip_address(cluster_id):
     #get boto3 emr client
     obj_awsBoto3 = awsBoto3()
@@ -15,17 +19,16 @@ def fetch_ip_address(cluster_id):
     return list_ips
 
 
-def ssh_and_update_cron(list_ips):
-    print(list_ips)
-    for i in list_ips:
-        #SSH into the machine
-        #if str(i) == "172.30.138.8":
-        print("==================================SSH into " + str(i) + "=============================================")
+def ssh_and_update_cron(list_ips, cluster_id):
+    logging.info("EMR IP list: " + str(list_ips))
 
-        ssh_cron_command = 'ssh ec2-user@172.30.138.8 "sudo bash -c \'touch /etc/cron.d/datadog-metrics; echo \\\"* * * * * root /usr/bin/ls / >> /tmp/datadog-metrics.log 2>&1\\\" >  /etc/cron.d/datadog-metrics; \'"'
-        ssh_cron_command = ' ssh ec2-user@172.30.138.8 "sudo bash -c \'ls / \' " '
-        ssh_cron_command = ' ssh ec2-user@' + i +' "sudo bash -c \'ifconfig \' " '
-        ssh_cron_command = 'ssh ec2-user@' + i + ' "sudo bash -c \'touch /etc/cron.d/datadog-metrics; echo \\\"* * * * * root cd /efs/users/datadog_agent/; /usr/bin/python3 /efs/users/datadog_agent/main.py j-176PGH9C696KQ / >> /tmp/datadog-metrics.log 2>&1\\\" >  /etc/cron.d/datadog-metrics; \'"'
+    for i in list_ips:
+        logging.info("==================================SSH into " + str(i) + "=============================================")
+
+        #ssh_cron_command = 'ssh ec2-user@172.30.138.8 "sudo bash -c \'touch /etc/cron.d/datadog-metrics; echo \\\"* * * * * root /usr/bin/ls / >> /tmp/datadog-metrics.log 2>&1\\\" >  /etc/cron.d/datadog-metrics; \'"'
+        #ssh_cron_command = ' ssh ec2-user@172.30.138.8 "sudo bash -c \'ls / \' " '
+        #ssh_cron_command = ' ssh ec2-user@' + i +' "sudo bash -c \'ifconfig \' " '
+        ssh_cron_command = 'ssh ec2-user@' + i + ' "sudo bash -c \'touch /etc/cron.d/datadog-metrics; echo \\\"* * * * * root cd /efs/users/datadog_agent/; /usr/bin/python3 /efs/users/datadog_agent/main.py ' + cluster_id + ' / >> /tmp/datadog-metrics.log 2>&1\\\" >  /etc/cron.d/datadog-metrics; \'"'
 
         #Create a file with the command, and then try to execute the file
         f = open("ssh-configure-cron.sh", "w")
@@ -44,20 +47,26 @@ def ssh_and_update_cron(list_ips):
             """,
                                    shell=True,
                                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
         output, stderr = process.communicate()
         status = process.poll()
-        print(output)
+        logging.info("Output of SSH command " + output)
 
 
 def configure_ssh_in_emr(cluster_id):
     #Get all IP Addresses of a certain EMR Cluster
     list_ips = fetch_ip_address(cluster_id)
-    #SSH into every IP Address and Add or Update the Cronfile
-    ssh_and_update_cron(list_ips)
 
+    #SSH into every IP Address and Add or Update the Cronfile
+    ssh_and_update_cron(list_ips, cluster_id)
+
+
+parser = argparse.ArgumentParser(description='Configure cron jobs on EMR Servers')
+parser.add_argument('--cluster_id', '-c', type=str, help='EMR cluster ID')
+args = parser.parse_args()
+cluster_id = args.Path
 
 try:
-    cluster_id = sys.argv[1]
     configure_ssh_in_emr(cluster_id)
 except Exception as e:
     print(str(e))

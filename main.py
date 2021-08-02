@@ -23,7 +23,7 @@ def ssh_and_update_cron(list_ips, cluster_id):
     logging.info("EMR IP list: " + str(list_ips))
 
     for i in list_ips:
-        logging.info("==================================SSH into " + str(i) + "=============================================")
+        logging.info("====SSH into " + str(i) + "====")
 
         #ssh_cron_command = 'ssh ec2-user@172.30.138.8 "sudo bash -c \'touch /etc/cron.d/datadog-metrics; echo \\\"* * * * * root /usr/bin/ls / >> /tmp/datadog-metrics.log 2>&1\\\" >  /etc/cron.d/datadog-metrics; \'"'
         #ssh_cron_command = ' ssh ec2-user@172.30.138.8 "sudo bash -c \'ls / \' " '

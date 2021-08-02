@@ -1,5 +1,5 @@
 import logging
-import os.path
+
 
 class initialize_logger:
     def __init__(self, output_dir):
@@ -10,7 +10,7 @@ class initialize_logger:
 
         # create console handler and set level to info
         handler = logging.StreamHandler()
-        #handler.setLevel(logging.INFO)
+        # handler.setLevel(logging.INFO)
         log_file_format = "[%(levelname)s] - %(asctime)s - %(name)s - %(pathname)s:%(lineno)d : %(message)s"
         formatter = logging.Formatter(log_file_format)
         handler.setFormatter(formatter)

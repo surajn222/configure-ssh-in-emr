@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-from datadog import initialize, statsd
-import time
-from master_hbasemetrics import *
-from hbase_metrics import *
-from s3_metrics import *
-import sys
 import configparser
-from emr_utils import *
+
+from emrutils import *
+from hbasemetrics import *
+from masterhbasemetrics import *
+from s3metrics import *
 
 config = configparser.ConfigParser(allow_no_value=True, delimiters=('='))
 config.read('config.ini')
@@ -20,7 +18,6 @@ list_hostnames = list(config.items('jmx_hostnames'))
 list_hostnames = [i[0] for i in list_hostnames]
 print("Hostnames:")
 print(list_hostnames)
-
 
 str_is_master = identify_master_node()
 str_local_ip = get_local_ip()
@@ -50,20 +47,18 @@ for hostname in list_hostnames:
     except Exception as e:
         print("Exception in fetching or pushing metrics: " + str(e))
 
-
-#S3 metrics
+# S3 metrics
 list_tables = list(config.items('tables'))
 list_tables = [i[0] for i in list_tables]
 print("Tables")
 print(list_tables)
-
 
 if str_is_master:
     bucket_name = config['s3_metrics']['bucket']
     prefix = config['s3_metrics']['prefix']
     tag = config['s3_metrics']['tag']
 
-    print("Pushing S3 Metrics: " + "Bucket name: " + bucket_name + " Prefix: " +  prefix + "Tag: " + tag)
+    print("Pushing S3 Metrics: " + "Bucket name: " + bucket_name + " Prefix: " + prefix + "Tag: " + tag)
 
     try:
         obj_s3_metrics = s3_metrics()
@@ -72,11 +67,6 @@ if str_is_master:
         obj_s3_metrics.fetch_and_push_metrics(bucket_name, prefix, tag, list_tables)
     except Exception as e:
         print(str(e))
-
-
-
-
-
 
 #
 # options = {

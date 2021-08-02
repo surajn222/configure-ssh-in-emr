@@ -5,9 +5,10 @@ Fetches and parses HBase JMX metrics in JSON format and converts them to a list 
 """
 
 import json
-import re
-import urllib3
 import logging
+import re
+
+import urllib3
 
 logger = logging.getLogger('hbasemetrics')
 
@@ -93,9 +94,10 @@ def get_metrics_from_bean(bean, aggregate_by_region):
                         "isActiveMaster": 'true' if value in {'True', 'true', True} else 'false'
                     })
 
-def fetch_metrics(hbase_jmx_json_url,  aggregate_by_region=False):
-    http=urllib3.PoolManager()
-    response=http.request("GET",hbase_jmx_json_url + "/jmx")
+
+def fetch_metrics(hbase_jmx_json_url, aggregate_by_region=False):
+    http = urllib3.PoolManager()
+    response = http.request("GET", hbase_jmx_json_url + "/jmx")
     data = json.loads(response.data.decode('utf-8'))
     for bean in data['beans']:
         for metric in get_metrics_from_bean(bean, aggregate_by_region):
